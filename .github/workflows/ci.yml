@@ -17,26 +17,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Download source code
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # Step 2: Configure Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      # Step 3: Install frontend dependencies
       - name: Install Dependencies
-        working-directory: frontend
+        working-directory: client
         run: npm install
 
-      # Step 4: Build frontend
       - name: Build Application
-        working-directory: frontend
+        working-directory: client
         run: npm run build
 
-      # Step 5: Display success message
       - name: CI Success
         run: echo "CODOMAX frontend build completed successfully!"
