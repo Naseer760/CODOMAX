@@ -13,7 +13,7 @@ on:
 
 jobs:
   frontend-build:
-    name: Build CODOMAX Frontend
+    name: Frontend Build Verification
     runs-on: ubuntu-latest
 
     steps:
@@ -24,14 +24,40 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+          cache-dependency-path: client/package-lock.json
 
-      - name: Install Dependencies
+      - name: Install Frontend Dependencies
         working-directory: client
-        run: npm install
+        run: npm ci
 
-      - name: Build Application
+      - name: Build Frontend
         working-directory: client
         run: npm run build
 
-      - name: CI Success
-        run: echo "CODOMAX frontend build completed successfully!"
+  backend-test:
+    name: Backend Automated Testing
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+
+      - name: Install Backend Dependencies
+        working-directory: server
+        run: npm ci
+
+      - name: Check Backend Syntax
+        working-directory: server
+        run: node --check server.js
+
+      - name: Run Backend Tests
+        working-directory: server
+        run: npm test
